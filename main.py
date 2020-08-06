@@ -1,18 +1,11 @@
-# Git version test
+import networkx as nx
 
-# Press Mayús+F10 to execute it or replace it with your code.
-# Press Double Shift to search everywhere for classes, files, tool windows, actions, and settings.
+G = nx.Graph()
 
+#Nodos = ["Julio", "Natalia"]
+G.add_nodes_from(["folates", "asparagus", "liver"]) # Add a list of nodes
+G.add_edges_from([("folates", "liver"), ("folates", "asparagus")])
 
-def print_hi(name):
-    # Use a breakpoint in the code line below to debug your script.
-    print(f'Hi, {name}')  # Press Ctrl+F8 to toggle the breakpoint.
-
-
-# Press the green button in the gutter to run the script.
-if __name__ == '__main__':
-    print_hi('PyCharm')
+print(G.nodes)
 
 
-
-# See PyCharm help at https://www.jetbrains.com/help/pycharm/
