@@ -49,10 +49,16 @@ df3 = df2 [['Titulo', 'Autores']]
 
 print(df3)
 
-G = nx.from_pandas_edgelist(df3, 'Autores', 'Titulo')
-
+G.add_nodes_from(df3['Autores'] )
+G.add_edge('NATALIA GAVIRIA GOMEZ', 'JUAN PABLO URREA DUQUE')
+G.add_edge('NATALIA GAVIRIA GOMEZ', 'KEVIN MC NEILL')
+G.add_edge('NATALIA GAVIRIA GOMEZ', 'JEFFREY RODRIGUEZ')
+plt.subplot(121)
+nx.draw(G, with_labels=True)
+plt.show()
 # from matplotlib.pyplot import figure
 # figure(figsize=(10, 8))
 # nx.draw_shell(G, with_labels=True)
-
 print(G.nodes)
+print(G.edges)
+
