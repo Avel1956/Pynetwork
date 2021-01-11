@@ -7,7 +7,7 @@ from pandas import *
 import os
 
 G = nx.Graph()
-
+# test
 
 excel_origen = ExcelFile('NGG.xlsx')
 df = excel_origen.parse(excel_origen.sheet_names[2])
