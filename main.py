@@ -1,6 +1,6 @@
 import networkx as nx
 import matplotlib.pyplot as plt
-import itertools
+import itertools as iter
 import numpy as np
 import pandas as pd
 from pandas import *
@@ -50,15 +50,24 @@ df3 = df2 [['Titulo', 'Autores']]
 print(df3)
 
 G.add_nodes_from(df3['Autores'] )
-G.add_edge('NATALIA GAVIRIA GOMEZ', 'JUAN PABLO URREA DUQUE')
-G.add_edge('NATALIA GAVIRIA GOMEZ', 'KEVIN MC NEILL')
-G.add_edge('NATALIA GAVIRIA GOMEZ', 'JEFFREY RODRIGUEZ')
+df4 = df3.groupby('Titulo').Autores.apply(lambda x: list(iter.combinations(x, 2)))
+a = []
+for name in df4.index:
+    print (name)
+    a.append(df4.loc[name])
+b = []
+for sublist in a:
+    for val in sublist:
+        b.append(val)
+
+print(b)
+G.add_edges_from(b)
 plt.subplot(121)
 nx.draw(G, with_labels=True)
 plt.show()
 # from matplotlib.pyplot import figure
 # figure(figsize=(10, 8))
 # nx.draw_shell(G, with_labels=True)
-print(G.nodes)
-print(G.edges)
+
+
 
