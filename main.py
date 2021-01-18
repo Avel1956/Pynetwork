@@ -5,13 +5,15 @@ import numpy as np
 import pandas as pd
 from pandas import *
 import os
-
+# iniciar graph
 G = nx.Graph()
-# test
 
+# importar archivo excel
 excel_origen = ExcelFile('NGG.xlsx')
+# convertir en dataframe la hoja con la informacion de articulos y autores
 df = excel_origen.parse(excel_origen.sheet_names[2])
 
+# expandir los autores separados con comas en la hoja original
 def explode(df, lst_cols, fill_value='', preserve_index=False):
     # make sure `lst_cols` is list-alike
     if (lst_cols is not None
@@ -45,26 +47,31 @@ def explode(df, lst_cols, fill_value='', preserve_index=False):
 
 df2 = explode(df.assign(Autores=df.Autores.str.split(',')), 'Autores')
 
+# reducir el dataframe a los articulos y autores
 df3 = df2 [['Titulo', 'Autores']]
 
-print(df3)
-
-G.add_nodes_from(df3['Autores'] )
+# agrupar los autores por titulo de articulo
 df4 = df3.groupby('Titulo').Autores.apply(lambda x: list(iter.combinations(x, 2)))
+
+# crear un vector con las combinaciones de pares de autores para cada articulo
 a = []
 for name in df4.index:
-    print (name)
     a.append(df4.loc[name])
 b = []
 for sublist in a:
     for val in sublist:
         b.append(val)
 
-print(b)
+
+# añadir la informacion de las relaciones
 G.add_edges_from(b)
+
+# representar
 plt.subplot(121)
 nx.draw(G, with_labels=True)
 plt.show()
+print(nx.info(G))
+
 # from matplotlib.pyplot import figure
 # figure(figsize=(10, 8))
 # nx.draw_shell(G, with_labels=True)
