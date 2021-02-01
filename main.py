@@ -3,6 +3,7 @@ import matplotlib.pyplot as plt
 import itertools as iter
 import numpy as np
 import pandas as pd
+import xlsxwriter
 from pandas import *
 import os
 # iniciar graph
@@ -62,7 +63,7 @@ def initialNetwork (dataf):
     for sublist in a:
         for val in sublist:
             b.append(val)
-
+    print (b)
 
     # añadir la informacion de las relaciones
     G.add_edges_from(b)
@@ -73,6 +74,18 @@ def initialNetwork (dataf):
     plt.show()
     print(nx.info(G))
 
+
+    workbook = xlsxwriter.Workbook('arrays.xlsx')
+    worksheet = workbook.add_worksheet()
+
+    array = b
+
+    row = 0
+
+    for col, data in enumerate(array):
+        worksheet.write_column(row, col, data)
+
+    workbook.close()
     # from matplotlib.pyplot import figure
     # figure(figsize=(10, 8))
     # nx.draw_shell(G, with_labels=True)

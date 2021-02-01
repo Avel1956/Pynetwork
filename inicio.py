@@ -32,9 +32,13 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         root = tk.Tk()
         root.withdraw()
 
-        file_path = filedialog.askopenfilename()
-        excel_origen = ExcelFile(file_path)
-        df = excel_origen.parse(excel_origen.sheet_names[2])
+        file_path = filedialog.askdirectory()
+        files = os.listdir(file_path)
+        print(files)
+        df = pd.DataFrame()
+        for file in files:
+            excel_origen = ExcelFile(file_path+'/'+file)
+            df = df.append(excel_origen.parse(excel_origen.sheet_names[2]))
         a = Investigador(df)
         print(file_path)
         initialNetwork(a.df)
