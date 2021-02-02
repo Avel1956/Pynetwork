@@ -8,6 +8,7 @@ import itertools as iter
 import numpy as np
 import pandas as pd
 from pandas import *
+import weakref
 
 # Clase principal de la interfaz
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -29,17 +30,60 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         class Investigador:
             def __init__(self, df):
                 self.df = df
+
+        class persona:
+            personainstancia = []
+            def __init__(self, nombre, cf):
+                self.__class__.personainstancia.append(weakref.proxy(self))
+                self.nombre = nombre
+                self.cf = cf
+                self.titulo = cf['Titulo']
+                self.autores = cf['Autores']
+                self.year = cf['Año']
+                self.revista = cf['Revista']
+                self.pais = cf['País']
+                self.issn = cf['ISSN']
+                self.doi = cf['DOI']
+                self.categoria = cf['Categoría']
+
         root = tk.Tk()
         root.withdraw()
 
         file_path = filedialog.askdirectory()
         files = os.listdir(file_path)
-        print(files)
+
         df = pd.DataFrame()
+        personas = []
+        holder = {"nombre": [], "instancia": []}
+        # recoleccion y limpieza de nombres de investigadores
         for file in files:
-            excel_origen = ExcelFile(file_path+'/'+file)
-            df = df.append(excel_origen.parse(excel_origen.sheet_names[2]))
+            excel_origen = ExcelFile(file_path + '/' + file)
+            instancename = file.replace('.xlsx', '')
+            personas.append(instancename)
+
+            cf = pd.DataFrame()
+            cf = cf.append(excel_origen.parse(excel_origen.sheet_names[2]))
+
+            holder["nombre"].append(instancename)
+            holder["instancia"].append(persona(instancename, cf))
+            df = df.append(cf)
+
+        def get_key(k):
+            for key, value in holder.items():
+                i =0
+                for x in value:
+                    i = i + 1
+                    if x == k:
+                        classperson = holder.get('instancia')[i-1]
+                        return classperson
+
+            return "key doesn't exist"
+
+
+        position = get_key('ALBIO DE JESUS GUTIERREZ AMADOR')
+        print(position.issn)
         a = Investigador(df)
+
         print(file_path)
         initialNetwork(a.df)
 
