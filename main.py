@@ -69,12 +69,27 @@ def initialNetwork (dataf):
     G.add_edges_from(b)
 
     # representar
-    plt.subplot(121)
-    nx.draw(G, with_labels=True)
+    # Represntacion usando Kamada-kawai
+    plt.subplot(111)
+    nx.draw_kamada_kawai(G, with_labels = True,  node_size = 100, font_size = 6 ,alpha = 0.5)
     plt.show()
-    print(nx.info(G))
 
+    # representacion tipo shell'
+    # plt.subplot(111)
+    # net_details = nx.draw_shell(G, with_labels = True,  node_size = 100, font_size = 6 ,alpha = 0.5)
+    # plt.show(net_details)
 
+    # # representacion tipo spring'
+    # plt.subplot(111)
+    # nx.draw_spring(G, with_labels = True,  node_size = 100, font_size = 6 ,alpha = 0.5)
+    # plt.show()
+    #
+    # # representacion tipo circle'
+    # plt.subplot(111)
+    # nx.draw_circular(G)
+    # plt.show()
+
+    # creacion de un archivo con todas las conexiones de la red'
     workbook = xlsxwriter.Workbook('arrays.xlsx')
     worksheet = workbook.add_worksheet()
 
@@ -86,6 +101,10 @@ def initialNetwork (dataf):
         worksheet.write_column(row, col, data)
 
     workbook.close()
+
+    # devuelve la red global g
+    return G
+
     # from matplotlib.pyplot import figure
     # figure(figsize=(10, 8))
     # nx.draw_shell(G, with_labels=True)

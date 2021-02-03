@@ -7,48 +7,98 @@
 # WARNING! All changes made in this file will be lost!
 
 from PyQt5 import QtCore, QtGui, QtWidgets
+from pyqtgraph import PlotWidget, plot
+import pyqtgraph as pg
+import sys
+import os
+import sys
+import matplotlib
+matplotlib.use('Qt5Agg')
+
+from PyQt5 import QtCore, QtWidgets
+
+from matplotlib.backends.backend_qt5agg import FigureCanvasQTAgg
+from matplotlib.figure import Figure
+
+
+class MplCanvas(FigureCanvasQTAgg):
+
+    def __init__(self, parent=None, width=5, height=4, dpi=100):
+        fig = Figure(figsize=(width, height), dpi=dpi)
+        self.axes = fig.add_subplot(111)
+        super(MplCanvas, self).__init__(fig)
+
 
 class Ui_MainWindow(object):
     def setupUi(self, MainWindow):
         MainWindow.setObjectName("MainWindow")
-        MainWindow.resize(1102, 817)
+        MainWindow.resize(480, 700)
         self.centralwidget = QtWidgets.QWidget(MainWindow)
         self.centralwidget.setObjectName("centralwidget")
+
+        # Ventana de texto, terminal principal
         self.Term_princ = QtWidgets.QTextBrowser(self.centralwidget)
         self.Term_princ.setGeometry(QtCore.QRect(10, 10, 461, 541))
         self.Term_princ.setObjectName("Term_princ")
-        self.Graph_princ = QtWidgets.QGraphicsView(self.centralwidget)
+
+        # ventana de la figura integrada en desarrollo
+        self.Graph_princ = MplCanvas(self.centralwidget)
         self.Graph_princ.setGeometry(QtCore.QRect(480, 10, 541, 541))
         self.Graph_princ.setObjectName("Graph_princ")
+
+
+
+        # boton de salida de la aplicacion
         self.pushExit = QtWidgets.QPushButton(self.centralwidget)
-        self.pushExit.setGeometry(QtCore.QRect(990, 730, 93, 28))
+        self.pushExit.setGeometry(QtCore.QRect(377, 600, 93, 28))
         self.pushExit.setObjectName("pushExit")
+
+        # Menu de opciones
         MainWindow.setCentralWidget(self.centralwidget)
         self.menubar = QtWidgets.QMenuBar(MainWindow)
         self.menubar.setGeometry(QtCore.QRect(0, 0, 1102, 26))
         self.menubar.setObjectName("menubar")
         self.menuErevna = QtWidgets.QMenu(self.menubar)
         self.menuErevna.setObjectName("menuErevna")
+
+        # Opcion procesar'
         self.menuProcess = QtWidgets.QMenu(self.menubar)
         self.menuProcess.setObjectName("menuProcess")
         MainWindow.setMenuBar(self.menubar)
         self.statusbar = QtWidgets.QStatusBar(MainWindow)
         self.statusbar.setObjectName("statusbar")
         MainWindow.setStatusBar(self.statusbar)
+
+        # Opcion cargar directorio
         self.actionLoad = QtWidgets.QAction(MainWindow)
         self.actionLoad.setObjectName("actionLoad")
         self.actionSave = QtWidgets.QAction(MainWindow)
+
+        # Opcion guardar
         self.actionSave.setObjectName("actionSave")
+
+        # opcion salir
         self.actionExec = QtWidgets.QAction(MainWindow)
         self.actionExec.setObjectName("actionExec")
-        self.menuErevna.addSeparator()
-        self.menuErevna.addSeparator()
-        self.menuErevna.addAction(self.actionLoad)
-        self.menuErevna.addAction(self.actionSave)
-        self.menuProcess.addAction(self.actionExec)
-        self.menubar.addAction(self.menuErevna.menuAction())
-        self.menubar.addAction(self.menuProcess.menuAction())
 
+        self.menuErevna.addSeparator()
+
+        self.menuErevna.addSeparator()
+
+        # Accion de cargar
+        self.menuErevna.addAction(self.actionLoad)
+
+        # accion de guardar
+        self.menuErevna.addAction(self.actionSave)
+
+        # accion salir
+        self.menuProcess.addAction(self.actionExec)
+
+
+        self.menubar.addAction(self.menuErevna.menuAction())
+
+        # Accion procesar
+        self.menubar.addAction(self.menuProcess.menuAction())
         self.retranslateUi(MainWindow)
         QtCore.QMetaObject.connectSlotsByName(MainWindow)
 
