@@ -10,6 +10,8 @@ import pandas as pd
 from pandas import *
 import weakref
 import time
+from operator import itemgetter
+from fuzzywuzzy import fuzz
 
 # Clase principal de la interfaz
 class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
@@ -104,6 +106,8 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
         total_instance_time = instance_times_top-instance_timer
         self.Term_princ.append('\nTiempo de recoleccion de instancias de investigadores:  '+str(total_instance_time)+'s.')
 
+        print(holder["nombre"])
+
        # Funcion que compara un string dado (k) con los nombres del diccionario y
         # devuelve la instancia asociada (classperson)
         # def get_key(k):
@@ -132,18 +136,39 @@ class MainWindow(QtWidgets.QMainWindow, Ui_MainWindow):
 
         # Inicia la funcion initialnetwork con el dataframe df y devuelve la red G
         figura = initialNetwork(a.df)
-        self.Term_princ.append('\nTiempo de recoleccion de instancias de investigadores:  '+str(total_instance_time)+'s.')
-        self.Term_princ.append('\nNumero de articulos procesados:  ' + str(len(df['Titulo'])))
+        
+        self.Term_princ.append('\nNúmero de articulos procesados:  ' + str(len(df['Titulo'])))
 
         # Volcado del tiempo de ejecucion de la creacion de la red a la terminal principal
         network_construction_finish = time.time()
         network_construction_time = network_construction_finish-network_construction_start
 
-        self.Term_princ.append('Tiempo de construccion de la red:  ' + str(network_construction_time)+'s.')
+        self.Term_princ.append('Tiempo de construcción de la red:  ' + str(network_construction_time)+'s.')
 
         # Volcado de informacion basica de la red
         self.Term_princ.append(str(len(holder['nombre'])))
         self.Term_princ.append(nx.info(figura))
+        self.Term_princ.append('\nCálculo de métricas de la red:')
+
+        density = nx.density(figura)
+        conectividad = nx.is_connected(figura)
+        components = nx.connected_components(figura)
+        largest_component = max(components, key=len)
+        subgraph = figura.subgraph(largest_component)
+        diameter = nx.diameter(subgraph)
+        triadic_closure = nx.transitivity(figura)
+        degree_dict = dict(figura.degree(figura.nodes()))
+
+        sorted_degree = sorted(degree_dict.items(), key=itemgetter(1), reverse=True)
+
+
+
+
+        self.Term_princ.append('Densidad de la red: ' + str(density))
+        self.Term_princ.append('Diámetro del segmento mayor: ' + str(diameter))
+        self.Term_princ.append('\nRanking de los 20 nodos principales con mayores conexiones:\n ')
+        for d in sorted_degree[:20]:
+            self.Term_princ.append(str(d))
 
 
         axex = [1,2,3,4,5,6,7,8,9,10]
